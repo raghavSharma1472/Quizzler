@@ -113,10 +113,11 @@ class _QuizPageState extends State<QuizPage> {
                 if(quizBrain.outofquestions()==true){
                   Alert(
                     context: context,
-                    title: 'Finished!',
+                    title: 'Congratulations!',
                     desc: 'You\'ve reached the end of the quiz.',
                   ).show();
                   quizBrain.reset();
+                  scoreKeeper.clear();
                 }else{
                   if(quizBrain.getquestionanswers()==false){
                     scoreKeeper.add(Icon(
