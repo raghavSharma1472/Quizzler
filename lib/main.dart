@@ -1,4 +1,10 @@
+import 'dart:core';
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'quiz_brain.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
+
+QuizBrain quizBrain = QuizBrain();
 
 void main() => runApp(Quizzler());
 
@@ -25,6 +31,7 @@ class QuizPage extends StatefulWidget {
 }
 
 class _QuizPageState extends State<QuizPage> {
+  List<Icon> scoreKeeper = [];
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -37,7 +44,7 @@ class _QuizPageState extends State<QuizPage> {
             padding: EdgeInsets.all(10.0),
             child: Center(
               child: Text(
-                'This is where the question text will go.',
+                quizBrain.getquestiontext(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 25.0,
@@ -60,7 +67,31 @@ class _QuizPageState extends State<QuizPage> {
                   fontSize: 20.0,
                 ),
               ),
-              onPressed: () {
+              onPressed: () {setState(() {
+                if(quizBrain.outofquestions()==true){
+                  Alert(
+                    context: context,
+                    title: 'Congratulations!',
+                    desc: 'You\'ve reached the end of the quiz.',
+                  ).show();
+                  quizBrain.reset();
+                  scoreKeeper.clear();
+                }else{
+                  if(quizBrain.getquestionanswers()==true){
+                    scoreKeeper.add(Icon(
+                      Icons.check,
+                      color: Colors.green,
+                    ),);
+                  }else{
+                    scoreKeeper.add(Icon(
+                      Icons.close,
+                      color: Colors.red,
+                    ),);
+                  }
+                  quizBrain.questionNumber();
+                }
+
+              });
                 //The user picked true.
               },
             ),
@@ -78,13 +109,39 @@ class _QuizPageState extends State<QuizPage> {
                   color: Colors.white,
                 ),
               ),
-              onPressed: () {
+              onPressed: () {setState(() {
+                if(quizBrain.outofquestions()==true){
+                  Alert(
+                    context: context,
+                    title: 'Finished!',
+                    desc: 'You\'ve reached the end of the quiz.',
+                  ).show();
+                  quizBrain.reset();
+                }else{
+                  if(quizBrain.getquestionanswers()==false){
+                    scoreKeeper.add(Icon(
+                      Icons.check,
+                      color: Colors.green,
+                    ),);
+                  }else{
+                    scoreKeeper.add(Icon(
+                      Icons.close,
+                      color: Colors.red,
+                    ),);
+                  }
+                  quizBrain.questionNumber();
+                }
+
+              });
                 //The user picked false.
+
               },
             ),
           ),
         ),
-        //TODO: Add a Row here as your score keeper
+        Row(
+          children: scoreKeeper
+        )
       ],
     );
   }
